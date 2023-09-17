@@ -1,0 +1,157 @@
+
+from datetime import datetime
+import sys
+
+# validate that date is in correct format
+def is_date_valid(date_input, date_format='%Y-%m-%d'):
+    try:
+        # Attempt to parse the date string with the specified format
+        datetime.strptime(date_input, date_format)
+        return True
+    except ValueError:
+        return False
+# takes inputs from customer
+def return_request_input_form():
+    while True:
+      full_name = input("Please enter your complete name: ")
+      full_name.title()
+      if full_name.isalpha() == True:
+        break
+      else:
+        print("Name can contain only letters ( special characters and numbers not allowed).")
+        sys.exit()
+
+    while True:
+      date_input_str = input("Enter the order date (YYYY-MM-DD): ")
+      date_format_verify = is_date_valid(date_input_str)
+      if date_format_verify == True:
+        break
+      else:
+        print("Please enter the correct format of the date (YYYY-MM-DD)")
+        sys.exit()
+    return date_input_str
+#checks that customer doesn't input a date from future
+def check_future_date(order_date,current_date):
+    if order_date >= current_date:
+        print(f'{order_date} is invalid input. Return cannot be placed from future.')
+        sys.exit()
+
+  #  logic to process the defective item received here
+def process_defective_item_received(order_date_str):
+
+    print(f"Processing the return request for the order placed on {order_date_str}.")
+    order_date = datetime.strptime(date_input_str, '%Y-%m-%d').date()
+    current_date = datetime.now().date()
+    check_future_date(order_date,current_date)
+
+      #number of days between order placed and return requested
+    days_difference = (current_date - order_date).days
+
+    if 0< days_difference <= 30:
+        print("The order is eligible for return.")
+        receipt_input = input("Please share do you have the original receipt?").lower()
+        if receipt_input == 'yes':
+            print("Great news! You are eligible for full refund")
+            creditOrAccount = input("Do you want the amount refunded to the bank account(1) or as store credits(2)? ")
+            if creditOrAccount == '1':
+                print("Sorry for your experience. Thank you for shopping with us, the amount will be tranferred to your account in 2-3 business days.")
+            elif creditOrAccount == '2':
+                print("Sorry for your experience. Thank you for shopping with us, the full amount is added to your walmart account credits.")
+            else:
+                print("Sorry, the amount can be refunded only to bank account or store credit")
+        else:
+            print("Sorry, without the original reciept the return cannot be processed. Thank you for shopping with us.")
+    else:
+        print("Sorry, the return request cannot be placed after 30 days of order placed. Thank you for shopping with us.")
+
+#  logic to process the defective item received here
+def process_item_not_needed(order_date_str):
+    print(f"Processing the return request for the order placed on {order_date_str}.")
+    order_date = datetime.strptime(order_date_str, '%Y-%m-%d').date()
+    current_date = datetime.now().date()
+    check_future_date(order_date,current_date)
+
+    #number of days between order placed and return requested
+    days_difference = (current_date - order_date).days
+
+    if 0< days_difference <= 30:
+        print("The order is eligible for return.")
+        receipt_input = input("Please share do you have the original receipt?").lower()
+        if receipt_input == 'yes':
+            print("Great news! You are eligible for full refund")
+            bill_amount = input("Please enter the total order amount: ")
+            print("Since the item is in perfect condition, 20% of total would be deducted from return amount as inconvenience fees")
+            total_amount_refund = int(bill_amount) * 0.8
+            creditOrAccount = input("Do you want the amount refunded to the bank account(1) or as store credits(2)? ")
+            if creditOrAccount == '1':
+                print(f'Sorry for your experience. Thank you for shopping with us, CAD {total_amount_refund} will be tranferred to your account in 2-3 business days.')
+            elif creditOrAccount == '2':
+                print(f'Sorry for your experience. Thank you for shopping with us,{total_amount_refund} is added to your walmart account credits.')
+            else:
+                print("Sorry, the amount can be refunded only to bank account or store credit")
+
+        else:
+            print("Sorry, without the original reciept the return cannot be processed. Thank you for shopping with us.")
+
+    else:
+        print("Sorry, the return request cannot be placed after 30 days of order placed. Thank you for shopping with us.")
+
+#logic to process customer request when wrong order is received
+def process_wrong_product_received(order_date_str):
+  print(f"Processing the return request for the order placed on {order_date_str}.")
+  order_date = datetime.strptime(order_date_str, '%Y-%m-%d').date()
+  current_date = datetime.now().date()
+  check_future_date(order_date,current_date)
+
+    #number of days between order placed and return requested
+  days_difference = (current_date - order_date).days
+
+  if 0< days_difference <= 30:
+        print("The order is eligible for return or replacement.")
+        receipt_input = input("Please share do you have the original receipt?").lower()
+        if receipt_input == 'yes':
+            print("Great news! You are eligible for full refund or replacement with correct item")
+            refund_or_replace = input("Do you want to get a refund or get the replacement product? (refund/replace)").lower()
+            if refund_or_replace == 'refund':
+               creditOrAccount = input("Do you want the amount refunded to the bank account(1) or as store credits(2)? ")
+               if creditOrAccount == '1':
+                 print("Sorry for your experience. Thank you for shopping with us, the amount will be tranferred to your account in 2-3 business days.")
+               elif creditOrAccount == '2':
+                 print("Sorry for your experience. Thank you for shopping with us, the full amount is added to your walmart account credits.")
+               else:
+                 print("Sorry, the amount can be refunded only to bank account or store credit")
+
+            elif refund_or_replace == 'replace':
+              print("Thank you for shopping with us, the wrong item will be picked in 2 business days and post inspection it will be delivered in another 2 business days.")
+
+        else:
+            print("Sorry, without the original reciept the return cannot be processed. Thank you for shopping with us.")
+  else:
+        print("Sorry, the return request cannot be placed after 30 days of order placed. Thank you for shopping with us.")
+
+
+
+print("Welcome to Walmart return service, how may we help you today?")
+print("Press 1, If you received a damaged or defective item")
+print("Press 2, If you do not need the item anymore")
+print("Press 3, If you received a wrong item in delivery")
+return_choice = input("Please select one of the above mentioned options:")
+
+if return_choice == '1':
+    print("We apologize that the item you received was defective, we will assist you in placing the return request.")
+    date_input_str = return_request_input_form()
+    process_defective_item_received(date_input_str)
+
+elif return_choice == '2':
+  print("Sorry to hear that you don't need the item anymore, we will assist you in placing the return request.")
+  date_input_str = return_request_input_form()
+  process_item_not_needed(date_input_str)
+
+
+elif return_choice == '3':
+  print("Sorry to hear that you received the wrong product, we will assist you in placing the return request.")
+  date_input_str = return_request_input_form()
+  process_wrong_product_received(date_input_str)
+
+else:
+  print("Invalid case. Contact customer care services for extended support")
